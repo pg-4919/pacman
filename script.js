@@ -44,9 +44,29 @@ function sleep(ms) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
 
-function pointToLine(l1x, l1y, l2x, l2y, x, y) { //credit: stackoverflow "Or Betzalel"
-    return ((Math.abs((l2y - l1y) * x - (l2x - l1x) * y + l2x * l1y - l2y * l1x)) /
-    (Math.pow((Math.pow(l2y - l1y, 2) + Math.pow(l2x - l1x, 2)), 0.5)));
+function pointToLine(x1, y1, x2, y2, x, y) { //stackoverflow.com/a/6853926
+    const A = x - x1;
+    const B = y - y1;
+    const C = x2 - x1;
+    const D = y2 - y1;
+    const dot = A * C + B * D;
+    const len_sq = C * C + D * D;
+    let param = -1;
+    if (len_sq != 0) param = dot / len_sq;
+    var xx, yy;
+    if (param < 0) {
+        xx = x1;
+        yy = y1;
+    } else if (param > 1) {
+        xx = x2;
+        yy = y2;
+    } else {
+        xx = x1 + param * C;
+        yy = y1 + param * D;
+    }
+    const dx = x - xx;
+    const dy = y - yy;
+    return Math.sqrt(dx * dx + dy * dy);
 }
 
 function checkCollision(l1x, l1y, l2x, l2y, x, y, minDistance) {
